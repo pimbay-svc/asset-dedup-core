@@ -1,0 +1,127 @@
+# Example configuration for asset-dedup-core.
+# Copy to a writable location, adjust, and point CONFIG_PATH at it.
+
+mime_to_group:
+  image/jpeg: image
+  image/png: image
+  image/webp: image
+  image/gif: image
+  application/pdf: pdf
+  video/3gpp: video
+  video/3gpp2: video
+  video/mp2t: video
+  video/mp4: video
+  video/mpeg: video
+  video/ogg: video
+  video/quicktime: video
+  video/webm: video
+  video/x-matroska: video
+  video/x-ms-wmv: video
+  video/x-msvideo: video
+  '*': binary # mandatory fallback — every mime not listed above resolves to this group
+
+subservices:
+  image-hash:
+    socket_path: /sockets/image-hash.sock
+  pdf-page-extract:
+    socket_path: /sockets/pdf-page-extract.sock
+  video-frame-extract:
+    socket_path: /sockets/video-frame-extract.sock
+
+algorithms:
+  sha256:
+    kind: native
+    comparison: exact
+
+  ahash8:
+    kind: subservice
+    subservice: image-hash
+    comparison: hamming
+    config:
+      algorithm: average_hash
+      hash_size: 8
+  dhash8:
+    kind: subservice
+    subservice: image-hash
+    comparison: hamming
+    config:
+      algorithm: dhash
+      hash_size: 8
+  phash8:
+    kind: subservice
+    subservice: image-hash
+    comparison: hamming
+    config:
+      algorithm: phash
+      hash_size: 8
+  phash16:
+    kind: subservice
+    subservice: image-hash
+    comparison: hamming
+    config:
+      algorithm: phash
+      hash_size: 16
+  whash8:
+    kind: subservice
+    subservice: image-hash
+    comparison: hamming
+    config:
+      algorithm: whash
+      hash_size: 8
+
+  # Placeholder — the `embedding` subservice is not implemented yet (see spec's open items).
+  # Don't add `clip-vit-b32` to any `pipelines` entry until that subservice exists.
+#  clip-vit-b32:
+#    kind: subservice
+#    subservice: embedding
+#    comparison: cosine
+#    config:
+#      model: clip-vit-b32
+
+extractors:
+  video-frames:
+    subservice: video-frame-extract
+    config:
+      sampling_strategy: uniform
+      frame_count: 5
+
+  pdf-pages:
+    subservice: pdf-page-extract
+    config:
+      page_selection: first-middle-last
+      dpi: 150
+
+pipelines:
+  binary:
+    sha256:
+      algorithm: sha256
+
+  image:
+    sha256:
+      algorithm: sha256
+    dhash8:
+      algorithm: dhash8
+    phash8:
+      algorithm: phash8
+    phash16:
+      algorithm: phash16
+
+  video:
+    sha256:
+      algorithm: sha256
+    frame5_phash8:
+      extractor: video-frames
+      algorithm: phash8
+    frame5_phash16:
+      extractor: video-frames
+      algorithm: phash16
+
+  pdf:
+    sha256:
+      algorithm: sha256
+    pages_phash8:
+      extractor: pdf-pages
+      algorithm: phash8
+    pages_phash16:
+      extractor: pdf-pages
+      algorithm: phash16

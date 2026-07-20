@@ -1,0 +1,22 @@
+services:
+  core:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: pimbay/asset-dedup-core:local
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:3000:3000'
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+      CONFIG_PATH: /etc/asset-dedup-core/config.yaml
+      ASSET_WORKDIR: /shared
+    volumes:
+      - ./config/config.yaml:/etc/asset-dedup-core/config.yaml:ro
+      - shared-assets:/shared
+      - sockets:/sockets:ro
+    restart: unless-stopped
+
+volumes:
+  shared-assets: {}
+  sockets: {}

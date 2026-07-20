@@ -1,0 +1,17 @@
+dist/
+node_modules/
+test/
+var/
+stryker.config.mjs
+.DS_Store
+.env
+.env.*
+!.env.example
+.git
+.gitea
+.github
+.gitignore
+.idea/
+.vscode/
+*.log
+*.md

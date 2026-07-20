@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a change or addition to asset-dedup-core
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What can't you currently do, or what's currently awkward?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would the API/config/behavior look like? A rough config.yaml or request/response shape is more useful than prose.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Anything else you thought about, including "do nothing."
+    validations:
+      required: false

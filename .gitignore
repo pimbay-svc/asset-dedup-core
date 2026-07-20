@@ -1,0 +1,13 @@
+/.idea/
+/.settings/
+
+/config/config.yaml
+/dist/
+/node_modules/
+/var/
+
+.env
+.env.*
+!.env.example
+*.local
+!/**/.gitkeep

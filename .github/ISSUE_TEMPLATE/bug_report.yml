@@ -1,0 +1,45 @@
+name: Bug report
+description: Something in asset-dedup-core isn't working as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected instead, and what actually happened.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal `config.yaml` + request that reproduces it, if applicable.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version / image tag / commit
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Docker (docker compose)
+        - Docker (other)
+        - Local (npm run dev)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Structured JSON logs if `NODE_ENV=production`, or the actual output either way. Redact anything sensitive.
+      render: shell
