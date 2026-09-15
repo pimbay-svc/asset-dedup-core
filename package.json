@@ -1,7 +1,7 @@
 {
   "name": "@pimbay/asset-dedup-core",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Pipeline-orchestrating asset hashing/embedding service (asset-dedup ecosystem, core service).",
   "license": "Unlicense",
   "author": {
