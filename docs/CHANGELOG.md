@@ -5,6 +5,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); version
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-15
+
 ### Added
 
 - `POST /hash` — resolves a file's mime type to a `mime_group` and runs that group's named pipelines — all of them, or a caller-picked subset via the request's `recipes` field — returning all selected results in one response: `{ "results": [{ "recipe": "...", "hashes"/"vectors": [...] }] }`.
