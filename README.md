@@ -116,7 +116,7 @@ npm run js:format:fix # fix
 npm run js:typecheck  # tsc --noEmit
 ```
 
-`npm run dev` already runs in watch mode (`tsx watch --env-file=.env`) — no separate watch command.
+`npm run dev` already runs in watch mode (`tsx watch --env-file-if-exists=.env`) — no separate watch command.
 
 ## Architecture & Decisions
 
