@@ -28,3 +28,23 @@
 `core` ↔ `registry` stays HTTP deliberately — that's a real network boundary between independently-scaled, independently-deployed services, where HTTP's operational tooling (load balancing, standard observability) earns its overhead.
 
 **Alternatives considered:** keep the old HTTP delegate transport for `core` → extension calls.
+
+## Fail-closed pipeline execution — no partial results
+
+**Date:** 2026-09-17
+
+**Decision:** Any `error` anywhere in any subservice response for one asset aborts that asset's entire pipeline. `PipelineService` never returns a partial result set for an asset with some recipes computed and others failed.
+
+**Why:** a caller acting on a partial result set (`asset-dedup-registry` chief among them) can't tell whether a missing recipe failed or was never attempted — treating the two the same, silently, would let a corrupted or partially-processed asset get persisted as if it were fully deduplicated. All-or-nothing per asset keeps that distinction unambiguous without pushing partial-state tracking onto every caller.
+
+**Alternatives considered:** a best-effort mode that returns whichever recipes succeeded and reports the rest as failed alongside them.
+
+## Subservice socket protocol has no request id — one call in flight per connection
+
+**Date:** 2026-09-17
+
+**Decision:** `SubserviceConnection` queues calls to a given subservice and keeps strictly one in flight at a time — it never sends a second request before the first one's response (or timeout) resolves.
+
+**Why:** the wire protocol (`[4-byte BE length][UTF-8 JSON]`, `{ op, config, inputs }` → `{ outputs }`) carries no request id in either direction. An unrecognized `op` gets no response frame at all, and a valid response can only be matched to whichever call is currently in flight on that connection — there's no other way to correlate request and response. Serializing calls per connection is what makes that matching sound.
+
+**Alternatives considered:** add a request id to the wire protocol and match responses by id, allowing multiple calls in flight per connection — would require changing every subservice's protocol implementation, not just `core`'s client.
