@@ -79,17 +79,17 @@ algorithms:
 #      model: clip-vit-b32
 
 extractors:
-  video-frames:
-    subservice: video-frame-extract
-    config:
-      sampling_strategy: uniform
-      frame_count: 5
-
   pdf-pages:
     subservice: pdf-page-extract
     config:
       page_selection: first-middle-last
       dpi: 150
+
+  video-frames:
+    subservice: video-frame-extract
+    config:
+      sampling_strategy: uniform
+      frame_count: 5
 
 pipelines:
   binary:
@@ -106,16 +106,6 @@ pipelines:
     phash16:
       algorithm: phash16
 
-  video:
-    sha256:
-      algorithm: sha256
-    frame5_phash8:
-      extractor: video-frames
-      algorithm: phash8
-    frame5_phash16:
-      extractor: video-frames
-      algorithm: phash16
-
   pdf:
     sha256:
       algorithm: sha256
@@ -124,4 +114,14 @@ pipelines:
       algorithm: phash8
     pages_phash16:
       extractor: pdf-pages
+      algorithm: phash16
+
+  video:
+    sha256:
+      algorithm: sha256
+    frame5_phash8:
+      extractor: video-frames
+      algorithm: phash8
+    frame5_phash16:
+      extractor: video-frames
       algorithm: phash16
