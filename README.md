@@ -29,16 +29,6 @@ docker compose up --build
 Exposes port `3000`, mounts `config/config.yaml` read-only, and declares the `shared-assets`/`sockets` volumes the extension services publish into under the same names.
 Run standalone like this, they're a private, unshared pair — bring `core` up as one Compose project together with the subservices (or via `asset-dedup-stack`) for the volumes to actually be shared; see `docker/README.md`'s "Docker Compose" section for the details.
 
-## Configuration
-
-| Variable        | Required | Description                                                                              |
-| --------------- | -------- | ---------------------------------------------------------------------------------------- |
-| `CONFIG_PATH`   | yes      | Path to `config.yaml` — no default, the app fails fast if unset.                         |
-| `PORT`          | no       | HTTP port to listen on. Defaults to `3000`.                                              |
-| `ASSET_WORKDIR` | no       | Shared volume `core` and every subservice can reach by path. Defaults to `./var/assets`. |
-
-Full reference (all env vars, all `config.yaml` keys): **[docs/configuration.md](docs/configuration.md)**.
-
 ## Usage
 
 The smallest useful thing this service does: hash one local file and see its recipe results — `sha256` always runs natively, no subservice required for that part.
@@ -72,6 +62,16 @@ image.phash8    a1b2c3d4e5f6a7b8
 ```
 
 A full end-to-end workflow (recipe filtering, the fallback path, mime-mismatch behavior), plus edge cases worth knowing about: **[docs/usage.md](docs/usage.md)**.
+
+## Configuration
+
+| Variable        | Required | Description                                                                              |
+| --------------- | -------- | ---------------------------------------------------------------------------------------- |
+| `CONFIG_PATH`   | yes      | Path to `config.yaml` — no default, the app fails fast if unset.                         |
+| `PORT`          | no       | HTTP port to listen on. Defaults to `3000`.                                              |
+| `ASSET_WORKDIR` | no       | Shared volume `core` and every subservice can reach by path. Defaults to `./var/assets`. |
+
+Full reference (all env vars, all `config.yaml` keys): **[docs/configuration.md](docs/configuration.md)**.
 
 ## API
 

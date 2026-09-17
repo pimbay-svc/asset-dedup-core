@@ -29,7 +29,13 @@ interface ResponseEnvelope {
   outputs?: Record<string, SubserviceOutputItem>;
 }
 
-/** One persistent, strictly-sequential unix-socket connection to a single named subservice. */
+/**
+ * One persistent, strictly-sequential unix-socket connection to a single named subservice.
+ *
+ * The wire protocol carries no request id in either direction — an unrecognized `op` gets no response frame at all,
+ * and a valid response can only be matched to whichever call is currently in flight. So this class queues calls and
+ * never sends a second request before the first one's response (or timeout) resolves.
+ */
 export class SubserviceConnection {
   private socket: Socket | undefined;
   private connecting: Promise<Socket> | undefined;
